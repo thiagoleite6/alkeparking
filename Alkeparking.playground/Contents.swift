@@ -29,7 +29,7 @@ enum VehicleType {
 struct Vehicle: Parkable, Hashable {
     var plate: String
     let type: VehicleType
-    //var checkInTime : Date
+    var checkInTime : Date
     //Cartão de desconto
     //Tempo total no estacionamento
 
