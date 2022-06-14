@@ -3,7 +3,8 @@ import UIKit
 protocol Parkable {
     var plate: String { get }
     var type: VehicleType { get }
-    //var checkInTime: Date { get }
+    var checkInTime: Date { get }
+    var discountCard: String? { get }
 }
 
 enum VehicleType {
@@ -29,9 +30,8 @@ enum VehicleType {
 struct Vehicle: Parkable, Hashable {
     var plate: String
     let type: VehicleType
-    var checkInTime : Date
-    //Cartão de desconto
-    //Tempo total no estacionamento
+    var checkInTime: Date
+    var discountCard: String?    //Tempo total no estacionamento
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(plate.hashValue)
