@@ -91,8 +91,7 @@ struct Parking {
         let initialTime = 120
         let extraTime = 15
         let costPerExtraTime = 5
-
-
+        
         if parkedTime > initialTime {
             let timeExceeded = parkedTime - initialTime
             let surplus = timeExceeded / extraTime
@@ -192,8 +191,14 @@ let vehicle18 = Vehicle(plate: "000018", type:
 let vehicle19 = Vehicle(plate: "000019", type:
                             VehicleType.car, checkInTime: Date(), discountCard:
                             "DISCOUNT_CARD_007")
+
+// Data especifica
+let formatter = DateFormatter()
+formatter.dateFormat = "yyyy/MM/dd HH:mm"
+let someDateTime = formatter.date(from: "2022/06/15 14:05")
+
 let vehicle20 = Vehicle(plate: "000020", type:
-                            VehicleType.motorcycle, checkInTime: Date(), discountCard: nil)
+                            VehicleType.motorcycle, checkInTime: someDateTime ?? Date(), discountCard: nil)
 let vehicle21 = Vehicle(plate: "000021", type:
                             VehicleType.microBus, checkInTime: Date(), discountCard:
                             nil)
@@ -232,8 +237,11 @@ allVehicles.forEach { vehicle in
     }
 }
 
-alkeParking.checkOutVehicle(plate: "0000200") { totalRate in
+alkeParking.checkOutVehicle(plate: "000020") { totalRate in
     print("Your fee is \(totalRate)💰. Come back soon")
 } onError: {
     print("Sorry, the check-out failed ❌")
 }
+
+alkeParking.listVehicles()
+alkeParking.showAdminInfo()
