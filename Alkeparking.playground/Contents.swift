@@ -106,6 +106,17 @@ struct Parking {
 
         return total
     }
+    
+    func listVehicles() {
+        if vehicles.count > 0 {
+            print("Total vehicles: \(vehicles.count) \n")
+            for vehicle in vehicles {
+                print("Plate: \(vehicle.plate) 🚘\n")
+            }
+        } else {
+            print("Parking is empty! 😱")
+        }
+    }
 }
 
 //let car = Vehicle(plate: "AA111AA", type: VehicleType.car, checkInTime: Date(), discountCard: "DISCOUNT_CARD_001")
