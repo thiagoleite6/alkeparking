@@ -13,7 +13,7 @@ enum VehicleType {
     case motorcycle
     case bus
     case microBus
-    
+
     var rate: Int {
         switch self {
         case .car:
@@ -37,12 +37,11 @@ struct Vehicle: Parkable, Hashable {
         return Calendar.current.dateComponents([.minute], from:
                                                 checkInTime, to: Date()).minute ?? 0
     }
-    
-    
+
     func hash(into hasher: inout Hasher) {
         hasher.combine(plate.hashValue)
     }
-    
+
     static func == (lhs: Vehicle, rhs: Vehicle) -> Bool {
         lhs.plate == rhs.plate
     }
@@ -51,21 +50,32 @@ struct Vehicle: Parkable, Hashable {
 struct Parking {
     var vehicles: Set<Vehicle> = []
     var parkingLimit: Int = 20
-    
+
     mutating func checkInVehicle(_ vehicle: Vehicle, onFinish:
                                  (Bool) -> Void) {
         guard vehicles.count < parkingLimit else {
             onFinish(false)
             return
         }
-        
+
         guard !vehicles.contains(vehicle) else {
             onFinish(false)
             return
         }
-        
+
         vehicles.insert(vehicle)
         onFinish(true)
+    }
+
+    mutating func checkOutVehicle(plate: String, onSuccess: (Int) -> Void, onError: () -> Void) {
+
+        if let vehicle = vehicles.first(where: { $0.plate == plate }){
+            print(vehicle)
+            onSuccess(200)
+            vehicles.remove(vehicle)
+            return
+        }
+        onError()
     }
 }
 
@@ -88,6 +98,7 @@ struct Parking {
 //print(alkeParking.vehicles)
 
 var alkeParking = Parking()
+
 let vehicle1 = Vehicle(plate: "000001", type:
                         VehicleType.car, checkInTime: Date(), discountCard:
                         "DISCOUNT_CARD_001")
@@ -106,8 +117,8 @@ let vehicle6 = Vehicle(plate: "000006", type:
                         VehicleType.motorcycle, checkInTime: Date(), discountCard:
                         "DISCOUNT_CARD_004")
 let vehicle7 = Vehicle(plate: "000007", type:
-VehicleType.microBus, checkInTime: Date(), discountCard:
- nil)
+                        VehicleType.microBus, checkInTime: Date(), discountCard:
+                        nil)
 
 let vehicle8 = Vehicle(plate: "000008", type:
                         VehicleType.bus, checkInTime: Date(), discountCard:
@@ -130,7 +141,6 @@ let vehicle14 = Vehicle(plate: "000014", type:
 let vehicle15 = Vehicle(plate: "0000015", type:
                             VehicleType.microBus, checkInTime: Date(), discountCard:
                             nil)
-
 let vehicle16 = Vehicle(plate: "000016", type:
                             VehicleType.motorcycle, checkInTime: Date(), discountCard: nil)
 let vehicle17 = Vehicle(plate: "000017", type:
@@ -147,7 +157,6 @@ let vehicle20 = Vehicle(plate: "000020", type:
 let vehicle21 = Vehicle(plate: "000021", type:
                             VehicleType.microBus, checkInTime: Date(), discountCard:
                             nil)
-
 
 var allVehicles: [Vehicle] = []
 
@@ -185,4 +194,8 @@ allVehicles.forEach { vehicle in
     }
 }
 
-
+alkeParking.checkOutVehicle(plate: "0000200") { v in
+    print("Sucesso")
+} onError: {
+    print("erro")
+}
