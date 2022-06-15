@@ -5,7 +5,7 @@ protocol Parkable {
     var type: VehicleType { get }
     var checkInTime: Date { get }
     var discountCard: String? { get }
-    var parkedTime: Int? { get }
+    var parkedTime: Int { get }
 }
 
 enum VehicleType {
@@ -33,7 +33,7 @@ struct Vehicle: Parkable, Hashable {
     let type: VehicleType
     var checkInTime: Date
     var discountCard: String?    //Tempo total no estacionamento
-    var parkedTime: Int? {
+    var parkedTime: Int {
         return Calendar.current.dateComponents([.minute], from:
                                                 checkInTime, to: Date()).minute ?? 0
     }
@@ -70,8 +70,8 @@ struct Parking {
     mutating func checkOutVehicle(plate: String, onSuccess: (Int) -> Void, onError: () -> Void) {
 
         if let vehicle = vehicles.first(where: { $0.plate == plate }){
-            print(vehicle)
-            onSuccess(200)
+            let total = calculateFee(vehicleType: vehicle.type, parkedTime: vehicle.parkedTime, hasDiscountCard: vehicle.discountCard != nil)
+            onSuccess(total)
             vehicles.remove(vehicle)
             return
         }
@@ -203,9 +203,7 @@ allVehicles.append(vehicle18)
 allVehicles.append(vehicle19)
 allVehicles.append(vehicle20)
 allVehicles.append(vehicle21)
-
-print(allVehicles.count)
-
+å
 allVehicles.forEach { vehicle in
     alkeParking.checkInVehicle(vehicle) { inserted in
         if inserted {
@@ -216,8 +214,8 @@ allVehicles.forEach { vehicle in
     }
 }
 
-alkeParking.checkOutVehicle(plate: "0000200") { v in
-    print("Sucesso")
+alkeParking.checkOutVehicle(plate: "0000200") { totalRate in
+    print("Sucess, the total rate is \(totalRate)")
 } onError: {
-    print("erro")
+    print("error")
 }
