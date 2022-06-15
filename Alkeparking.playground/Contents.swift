@@ -50,6 +50,7 @@ struct Vehicle: Parkable, Hashable {
 struct Parking {
     var vehicles: Set<Vehicle> = []
     var parkingLimit: Int = 20
+    var adminInfo = (totalCheckoutVehicles: 0, totalEarnings: 0)
 
     mutating func checkInVehicle(_ vehicle: Vehicle, onFinish:
                                  (Bool) -> Void) {
@@ -72,10 +73,16 @@ struct Parking {
         if let vehicle = vehicles.first(where: { $0.plate == plate }){
             let total = calculateFee(vehicleType: vehicle.type, parkedTime: vehicle.parkedTime, hasDiscountCard: vehicle.discountCard != nil)
             onSuccess(total)
+            adminInfo.totalCheckoutVehicles += 1
+            adminInfo.totalEarnings += total
             vehicles.remove(vehicle)
             return
         }
         onError()
+    }
+    
+    func showAdminInfo() -> Void {
+        print("\(adminInfo.totalCheckoutVehicles) vehicles have checked out and have earnings of $\(adminInfo.totalEarnings)")
     }
 
     func calculateFee(vehicleType: VehicleType, parkedTime: Int, hasDiscountCard: Bool) -> Int {
@@ -203,7 +210,7 @@ allVehicles.append(vehicle18)
 allVehicles.append(vehicle19)
 allVehicles.append(vehicle20)
 allVehicles.append(vehicle21)
-å
+
 allVehicles.forEach { vehicle in
     alkeParking.checkInVehicle(vehicle) { inserted in
         if inserted {
@@ -215,7 +222,7 @@ allVehicles.forEach { vehicle in
 }
 
 alkeParking.checkOutVehicle(plate: "0000200") { totalRate in
-    print("Sucess, the total rate is \(totalRate)")
+    print("Your fee is \(totalRate)💰. Come back soon")
 } onError: {
-    print("error")
+    print("Sorry, the check-out failed ❌")
 }
