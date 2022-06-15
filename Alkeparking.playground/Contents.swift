@@ -77,6 +77,22 @@ struct Parking {
         }
         onError()
     }
+
+    func calculateFee(vehicleType: VehicleType, parkedTime: Int) -> Int {
+
+        var total = vehicleType.rate
+        let initialTime = 120
+        let extraTime = 15
+        let costPerExtraTime = 5
+
+        if parkedTime > initialTime {
+            let timeExceeded = parkedTime - initialTime
+            let surplus = timeExceeded / extraTime
+            total += surplus * costPerExtraTime
+        }
+
+        return total
+    }
 }
 
 //let car = Vehicle(plate: "AA111AA", type: VehicleType.car, checkInTime: Date(), discountCard: "DISCOUNT_CARD_001")
